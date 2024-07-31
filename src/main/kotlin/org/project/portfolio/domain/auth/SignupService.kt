@@ -4,8 +4,11 @@ import org.project.portfolio.common.CommonException
 import org.project.portfolio.domain.user.User
 import org.project.portfolio.domain.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.bcrypt.BCrypt
+import org.springframework.context.annotation.Bean
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+
 
 /**
  * 이메일 - 이메일 형식에 맞는지 검증
@@ -15,8 +18,12 @@ import org.springframework.stereotype.Service
  */
 @Service
 class SignupService @Autowired constructor(
-        private val userRepository: UserRepository
+    private val userRepository: UserRepository
 ){
+    @Bean
+    fun bCryptPasswordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
     fun signup(signupRequest: SignupRequest) {
         validateRequest(signupRequest)
         registerUser(signupRequest)
@@ -74,10 +81,10 @@ class SignupService @Autowired constructor(
         if(!(isValidPassword && password.replace("[^0-9]".toRegex(), "").length > 4))
             throw CommonException("비밀번호 형식이 올바르지 않습니다.")
     }
-
+// .password(bCryptPasswordEncoder.encode(dto.getPassword()))
     private fun registerUser(signupRequest: SignupRequest) =
         with(signupRequest) {
-            val hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt())
+            val hashedPassword = bCryptPasswordEncoder().encode(password)
             val user = User(email, name, hashedPassword, phone)
             userRepository.save(user)
     }

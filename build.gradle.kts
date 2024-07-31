@@ -27,14 +27,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     // 스프링 시큐리티
     implementation("org.springframework.boot:spring-boot-starter-security")
+    // JWT
+    implementation("com.auth0:java-jwt:4.4.0")
 
     runtimeOnly ("com.h2database:h2") // 인메모리 DB
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("io.mockk:mockk:{" +
-            "1.13.12")
+    testImplementation("io.mockk:mockk:1.13.12")
 }
 
 //apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
